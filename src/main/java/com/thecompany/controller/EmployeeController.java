@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/employee")
 @Produces(MediaType.APPLICATION_JSON)
@@ -105,6 +106,39 @@ public class EmployeeController {
 FROM
 	underlink;
         * */
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    public Response updateById(@PathParam("id") Integer id, JsonObject request) {
+        Employee employee = Employee.findById(id);
+
+        employee.name = request.getString("name");
+        employee.manager_id = request.getInteger("manager_id");
+
+        employee.persist();
+
+        return Response
+                .ok()
+                .entity(Map.of(
+                        "id",
+                        employee.id))
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response deleteById(@PathParam("id") Integer id) {
+        Employee employee = Employee.findById(id);
+
+        employee.delete();
+
+        return Response
+                .status(Response.Status.NO_CONTENT)
+                .entity(Map.of("Message", "Data_Deleted"))
+                .build();
     }
 }
 
