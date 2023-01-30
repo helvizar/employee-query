@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("/score")
+@Path("/employee/score")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class EmployeeScoreController {
@@ -25,13 +25,13 @@ public class EmployeeScoreController {
         employeeScore.score = request.getInteger("score");
 
         employeeScore.persist();
-        return Response.ok().entity(new HashMap<>()).build();
+        return Response.status(Response.Status.CREATED).entity(new HashMap<>()).build();
     }
 
     @GET
     public Response getScore() {
         List<Employee> employee = Employee.list(
-                "SELECT AVG(score) FROM EmployeeScore e WHERE id = ?1 OR id = ?2 OR id = ?3 OR id = ?4 OR id = ?5 OR id = ?6",2, 5, 6, 11, 12, 13);
+                "SELECT AVG(score) FROM EmployeeScore e WHERE id = ?1 OR id = ?2 OR id = ?3 OR id = ?4 OR id = ?5 OR id = ?6", 2, 5, 6, 11, 12, 13);
 
 
         return Response.ok().entity(Map.of("Average Score:", employee)).build();
